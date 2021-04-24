@@ -72,10 +72,10 @@ class User extends Authenticatable
      * Subscribe to some.
 	 * @return int
      */
-	public function subscribeTo(Model $subscrizable) :int {
+	public function subscribeTo(int $company_id, string $subscription_type) :int {
 		return $this->subscriptions()->firstOrCreate([
-			'subscrizable_type' => $subscrizable::subscrizableType,
-			'subscrizable_id'	=> $subscrizable->id
+			'company_id' => $company_id,
+			'subscription_type'	=> $subscription_type
 		])->id;
 	}
 
@@ -103,20 +103,5 @@ class User extends Authenticatable
 				: $query->whereHas('employee', function (Builder $query) use ($company_id) {
 					$query->where('company_id', $company_id);
 				});
-	}
-
-	/**
-     * Scope a query to get subscribed to some.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-	 * @param  string $subscrizable_type
-	 * @param  int $subscrizable_id
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-	public function ScopeSubscribedTo(Builder $query, Model $subscrizable) :Builder {
-		return $query->whereHas('subscriptions', function (Builder $query) {
-			$query->where('subscrizable_type', $subscrizable::subscrizableType)
-				  ->where('subscrizable_id', $subscrizable->id);
-		})->get();
 	}
 }

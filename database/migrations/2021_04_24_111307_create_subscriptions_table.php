@@ -4,8 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-use App\Helpers\Reflection;
-
 class CreateSubscriptionsTable extends Migration
 {
     /**
@@ -20,8 +18,8 @@ class CreateSubscriptionsTable extends Migration
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
 			$table->unsignedBigInteger('user_id');
-			$table->unsignedBigInteger('subscrizable_id');
-			$table->enum('subscrizable_type', Reflection::getSubscrizableTypes());
+			$table->unsignedBigInteger('company_id');
+			$table->enum('subscription_type', ['all', 'product', 'news']);
 			$table->timestamps();
 			$table->softDeletes();
         });

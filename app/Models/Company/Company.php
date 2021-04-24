@@ -7,18 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Traits\Models\Subscription\HasSubscribers;
+use App\Models\Subscription\Subscription;
 
 class Company extends Model
 {
-    use HasFactory, SoftDeletes, HasSubscribers;
-
-	/**
-     * Type of morph relation for subscribers
-     *
-     * @var string
-     */
-	public static $subscrizableType = 'company';
+    use HasFactory, SoftDeletes;
 
 	/**
      * The attributes that are mass assignable.
@@ -52,5 +45,13 @@ class Company extends Model
      */
 	public function products() :HasMany {
 		return $this->hasMany(CompanyProduct::class);
+	}
+
+	/**
+     * Get subscribers of company.
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+	public function subscribers() :HasMany {
+		return $this->hasMany(User::class, Subscription::class);
 	}
 }

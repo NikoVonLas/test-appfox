@@ -6,14 +6,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Builder;
 
 use App\Models\User;
 use App\Traits\Models\BelongsToUser;
+use App\Traits\Models\Company\BelongsToCompany;
 
 class Subscription extends Model
 {
-    use HasFactory, SoftDeletes, BelongsToUser;
+    use HasFactory, SoftDeletes, BelongsToUser, BelongsToCompany;
 
 	/**
      * The attributes that are mass assignable.
@@ -21,12 +22,19 @@ class Subscription extends Model
      * @var array
      */
     protected $fillable = [
-        'slug',
-        'name',
+		'user_id',
+		'company_id',
+		'subscription_type'
     ];
 
-	public function subscrizable()
-    {
-        return $this->morphTo();
-    }
+	/**
+     * Scope a query to only include active users.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+	 * @param  string $type
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+	public function ScopeByType(Builder $query, string $type) :Builder {
+		return $query->whereIn('subscription_type', [$type, 'all']);
+	}
 }
