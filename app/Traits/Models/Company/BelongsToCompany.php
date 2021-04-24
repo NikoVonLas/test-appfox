@@ -2,16 +2,17 @@
 
 namespace App\Traits\Models\Company;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 use App\Models\Company\Company;
 
 trait BelongsToCompany
 {
-    /**
-     * Create a new factory instance for the model.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+	/**
+     * Get employees of company.
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function company()
+    public function company() :BelongsTo
     {
     	$this->belongsTo(Company::class);
     }
