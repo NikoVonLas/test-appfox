@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Models\User;
 use App\Traits\Models\BelongsToUser;
 use App\Traits\Models\Company\BelongsToCompany;
+use App\Enums\Subscription\TypeEnum;
 
 class Subscription extends Model
 {
@@ -24,7 +25,7 @@ class Subscription extends Model
     protected $fillable = [
 		'user_id',
 		'company_id',
-		'subscription_type'
+		'type'
     ];
 
 	/**
@@ -35,6 +36,17 @@ class Subscription extends Model
      * @return \Illuminate\Database\Eloquent\Builder
      */
 	public function ScopeByType(Builder $query, string $type) :Builder {
-		return $query->whereIn('subscription_type', [$type, 'all']);
+		return $query->whereIn('type', [$type, TypeEnum::company()]);
+	}
+
+	/**
+     * Set subscription type
+     *
+	 * @param  App\Enums\Subscription\TypeEnum $type
+     * @return void
+     */
+	public function setType(TypeEnum $type) :void
+	{
+	    $this->type = $type;
 	}
 }
