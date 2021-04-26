@@ -35,8 +35,11 @@ class Subscription extends Model
 	 * @param  string $type
      * @return \Illuminate\Database\Eloquent\Builder
      */
-	public function ScopeByType(Builder $query, string $type) :Builder {
-		return $query->whereIn('type', [$type, TypeEnum::company()]);
+	public function ScopeByType(Builder $query, string|array $type) :Builder {
+		$types = [TypeEnum::company()];
+		is_array($type) ? $types = array_merge($types, $type) : $types[] = $type;
+
+		return $query->whereIn('type', $types);
 	}
 
 	/**
