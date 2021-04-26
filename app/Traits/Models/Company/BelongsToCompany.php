@@ -14,6 +14,18 @@ trait BelongsToCompany
      */
     public function company() :BelongsTo
     {
-    	$this->belongsTo(Company::class);
+    	return $this->belongsTo(Company::class);
     }
+
+	/**
+     * Scope a query to get entity only with company.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+	 * @param  int|null $id
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+	public function ScopeInCompany(Builder $query, ?int $id = null) :Builder {
+		return !empty($id) ? $query->where('company_id', $id)
+						   : $query->whereNotNull('company_id');
+	}
 }

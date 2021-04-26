@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\Relations\belongsToMany;
+use Illuminate\Database\Eloquent\Relations\hasMany;
 use Illuminate\Database\Eloquent\Relations\hasOne;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Company\CompanyNews;
 use App\Models\Company\CompanyProduct;
 use App\Models\Company\CompanyEmployee;
+use App\Models\Subscription\Subscription;
+use App\Enums\Subscription\TypeEnum;
 
 class User extends Authenticatable
 {
@@ -49,35 +51,48 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+	/**
+     * The channels the user receives notification broadcasts on.
+     *
+     * @return string
+     */
+    public function receivesBroadcastNotificationsOn()
+    {
+        return "notifications.user.{$this->id}";
+    }
+
 
 	/**
      * Get subscriptions of user.
-	 * @return \Illuminate\Database\Eloquent\Relations\belongsToMany|null
+	 * @return \Illuminate\Database\Eloquent\Relations\hasMany
      */
-	public function subscriptions() :?belongsToMany
+	public function subscriptions() :hasMany
     {
-        return $this->belongsToMany(Subscription::class);
-    }
-
-	/**
-     * Get employee model (like profile in company) of user.
-	 * @return \Illuminate\Database\Eloquent\Relations\hasOne|null
-     */
-	public function employee() :?hasOne
-    {
-        return $this->hasOne(CompanyEmployee::class);
+        return $this->hasMany(Subscription::class);
     }
 
 	/**
      * Subscribe to some.
-	 * @return int
+	 *
+	 * @param  int $company_id
+	 * @param  App\Enums\Subscription\TypeEnum|null $type
+	 * @return Subscription
      */
-	public function subscribeTo(int $company_id, string $subscription_type) :int {
+	public function subscribeTo(int $company_id, ?TypeEnum $type = null) :Subscription {
 		return $this->subscriptions()->firstOrCreate([
 			'company_id' => $company_id,
-			'subscription_type'	=> $subscription_type
-		])->id;
+			'type'		 => $type ?? TypeEnum::All
+		]);
 	}
+
+	/**
+     * Get employee model (like profile in company) of user.
+	 * @return \Illuminate\Database\Eloquent\Relations\hasOne
+     */
+	public function employee() :hasOne
+    {
+        return $this->hasOne(CompanyEmployee::class);
+    }
 
 	/**
      * Check user in company or not, if $company_id presented -
@@ -86,7 +101,7 @@ class User extends Authenticatable
      * @param  int|null $company_id
      * @return bool
      */
-	public function inCompany(?int $company_id = null) :bool {
+	public function isCompany(?int $company_id = null) :bool {
 		return empty($company_id) ? empty($this->employee) : $this->employee?->company_id === $company_id;
 	}
 

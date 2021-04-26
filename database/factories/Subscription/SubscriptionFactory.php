@@ -28,7 +28,7 @@ class SubscriptionFactory extends Factory
     public function definition() :array
     {
 		$name = $this->faker->productName();
-		$types = TypeEnum::toValues();
+		$types = TypeEnum::getValues();
         return [
 			'user_id'		=> fn() => User::inRandomOrder()->first()?->id ?? User::factory()->create()->id,
 			'company_id'	=> fn() => Company::inRandomOrder()->first()?->id ?? Company::factory()->create()->id,

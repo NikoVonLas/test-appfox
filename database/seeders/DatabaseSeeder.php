@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Builder;
 
 use App\Models\User;
 use App\Models\Company\Company;
@@ -28,14 +29,33 @@ class DatabaseSeeder extends Seeder
 		CompanyNews::flushEventListeners();
 		CompanyProduct::flushEventListeners();
 
-		User::factory(50)->create();
+		User::factory(100)->create();
 		Company::factory(10)
-			->hasEmployees(rand(1, 10))
+			->hasEmployees(rand(1, 5))
 			->hasNews(rand(3, 10))
 			->hasProducts(rand(5, 20))
 			->create();
 
-		$types = array_map(fn ($type) => ['type' => $type], TypeEnum::toValues());
-		Subscription::factory(80)->state(new Sequence(...$types))->create();
+		$employee 	= User::has('employee')->inRandomOrder()->first();
+		$user 		= User::doesntHave('employee')->inRandomOrder()->first();
+		$companies 	= Company::has('employees')->inRandomOrder()
+						->limit(count(TypeEnum::getValues()))->get();
+		$sequences = [];
+		foreach (TypeEnum::getValues() as $n => $type) {
+			$sequences[] = [
+				'user_id'		=> $employee->id,
+				'company_id'	=> $companies[$n]->id,
+				'type' 			=> $type
+			];
+			$sequences[] = [
+				'user_id'		=> $user->id,
+				'company_id'	=> $companies[$n]->id,
+				'type' 			=> $type
+			];
+		}
+
+		Subscription::factory(6)
+			->state(new Sequence(...$sequences))
+			->create();
     }
 }

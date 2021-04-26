@@ -1,6 +1,6 @@
 <?php
 	return [
-		'authHost'			=> env('APP_URL', 'http://localhost'),
+		'authHost'			=> env('LARAVEL_ECHO_SERVER_AUTH_HOST', 'http://localhost'),
 		'authEndpoint'		=> env('LARAVEL_ECHO_SERVER_AUTH_ENDPOINT', '/broadcasting/auth'),
 		'clients'			=> [
 			[

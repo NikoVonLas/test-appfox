@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\TestController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [TestController::class, 'index']);
+
+Route::get('/auth/{id?}', [TestController::class, 'changeUser'])->name('change-user');
+
+Route::get('/create-product', [TestController::class, 'createProduct'])->name('product.create');
+Route::get('/create-news', [TestController::class, 'createNews'])->name('news.create');

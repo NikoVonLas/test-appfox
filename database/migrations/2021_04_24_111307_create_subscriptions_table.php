@@ -27,7 +27,7 @@ class CreateSubscriptionsTable extends Migration
 				->constrained()
 				->onUpdate('cascade')
 				->onDelete('cascade');
-			$table->enum('type', TypeEnum::toValues())->default(TypeEnum::company());
+			$table->unsignedTinyInteger('type')->default(TypeEnum::All);
 			$table->timestamps();
 			$table->softDeletes();
         });

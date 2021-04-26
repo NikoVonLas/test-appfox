@@ -3,17 +3,16 @@
 namespace App\Enums\Subscription;
 
 use Illuminate\Support\Str;
-use \Spatie\Enum\Enum;
+use BenSampo\Enum\Enum;
 
 /**
  * @method static self company()
  * @method static self companyProduct()
  * @method static self companyNews()
  */
-class TypeEnum extends Enum
+final class TypeEnum extends Enum
 {
-	protected static function values(): \Closure
-    {
-        return fn(string $name) :string => Str::snake($name);
-    }
+	const All = 0;
+   	const CompanyProduct = 1;
+   	const CompanyNews = 2;
 }

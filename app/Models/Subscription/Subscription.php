@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use BenSampo\Enum\Traits\CastsEnums;
 
 use App\Models\User;
 use App\Traits\Models\BelongsToUser;
@@ -15,7 +16,7 @@ use App\Enums\Subscription\TypeEnum;
 
 class Subscription extends Model
 {
-    use HasFactory, SoftDeletes, BelongsToUser, BelongsToCompany;
+    use HasFactory, SoftDeletes, BelongsToUser, BelongsToCompany, CastsEnums;
 
 	/**
      * The attributes that are mass assignable.
@@ -29,16 +30,24 @@ class Subscription extends Model
     ];
 
 	/**
+     * The attributes casting.
+     *
+     * @var array
+     */
+	protected $casts = [
+        'type' => TypeEnum::class
+    ];
+
+	/**
      * Scope a query to only include active users.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
-	 * @param  string $type
+	 * @param  mixed $type
      * @return \Illuminate\Database\Eloquent\Builder
      */
-	public function ScopeByType(Builder $query, string|array $type) :Builder {
-		$types = [TypeEnum::company()];
+	public function ScopeByType(Builder $query, mixed $type) :Builder {
+		$types = [TypeEnum::All];
 		is_array($type) ? $types = array_merge($types, $type) : $types[] = $type;
-
 		return $query->whereIn('type', $types);
 	}
 
