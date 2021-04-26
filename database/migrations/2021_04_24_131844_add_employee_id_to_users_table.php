@@ -15,7 +15,11 @@ class AddEmployeeIdToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->after('name', function ($table) {
-				$table->unsignedBigInteger('employee_id')->nullable();
+				$table->foreignId('company_employee_id')
+					->nullable()
+					->constrained()
+					->onUpdate('cascade')
+      				->onDelete('set null');
 			});
         });
     }

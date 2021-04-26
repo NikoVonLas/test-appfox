@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+use App\Enums\Subscription\TypeEnum;
+
 class CreateSubscriptionsTable extends Migration
 {
     /**
@@ -17,9 +19,15 @@ class CreateSubscriptionsTable extends Migration
 
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-			$table->unsignedBigInteger('user_id');
-			$table->unsignedBigInteger('company_id');
-			$table->enum('subscription_type', ['all', 'product', 'news']);
+			$table->foreignId('user_id')
+				->constrained()
+				->onUpdate('cascade')
+				->onDelete('cascade');
+			$table->foreignId('company_id')
+				->constrained()
+				->onUpdate('cascade')
+				->onDelete('cascade');
+			$table->enum('type', TypeEnum::toValues())->default(TypeEnum::company());
 			$table->timestamps();
 			$table->softDeletes();
         });

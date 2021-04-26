@@ -15,7 +15,10 @@ class CreateCompanyNewsTable extends Migration
     {
         Schema::create('company_news', function (Blueprint $table) {
             $table->id();
-			$table->unsignedBigInteger('company_id');
+			$table->foreignId('company_id')
+				->constrained()
+				->onUpdate('cascade')
+				->onDelete('cascade');
 			$table->string('slug');
 			$table->string('title');
 			$table->text('content');

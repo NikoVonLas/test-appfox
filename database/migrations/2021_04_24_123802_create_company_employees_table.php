@@ -15,8 +15,14 @@ class CreateCompanyEmployeesTable extends Migration
     {
         Schema::create('company_employees', function (Blueprint $table) {
             $table->id();
-			$table->unsignedBigInteger('user_id');
-			$table->unsignedBigInteger('company_id');
+			$table->foreignId('user_id')
+				->constrained()
+				->onUpdate('cascade')
+				->onDelete('cascade');
+			$table->foreignId('company_id')
+				->constrained()
+				->onUpdate('cascade')
+				->onDelete('cascade');
 			$table->string('slug');
 			$table->string('position')->nullable();
             $table->timestamps();
