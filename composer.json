@@ -5,7 +5,8 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.0",
+        "php": "^8.0",
+        "bensampo/laravel-enum": "^3.3",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
@@ -13,7 +14,6 @@
         "laravel/horizon": "^5.7",
         "laravel/tinker": "^2.5",
         "mbezhanov/faker-provider-collection": "^2.0",
-        "spatie/enum": "^3.8",
         "tightenco/ziggy": "^1.1"
     },
     "require-dev": {
